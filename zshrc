@@ -35,3 +35,18 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 #bindkey "\e[F" end-of-line
 bindkey "\e[1;5D" backward-word
 bindkey "\e[1;5C" forward-word
+
+alias noh="unsetopt sharehistory"
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
+unset RUBYOPT
+cd . # to rvm reload
+
+if [[ -x `which hitch` ]]; then
+	hitch() {
+		command hitch "$@"
+		if [[ -s "$HOME/.hitch_export_authors" ]] ; then source "$HOME/.hitch_export_authors" ; fi
+	}
+	alias unhitch='hitch -u'
+	hitch
+fi
