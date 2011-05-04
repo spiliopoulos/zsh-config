@@ -50,3 +50,5 @@ if [[ -x `which hitch` ]]; then
 	alias unhitch='hitch -u'
 	hitch
 fi
+
+alias nogit="disable_git_prompt_info"
