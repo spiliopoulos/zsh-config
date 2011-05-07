@@ -54,3 +54,5 @@ if [[ -x `which hitch` ]]; then
 fi
 
 alias nogit="disable_git_prompt_info"
+
+PATH=~/bin/:~/node_modules/.bin/:$PATH
