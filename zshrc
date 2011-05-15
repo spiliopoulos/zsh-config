@@ -40,6 +40,7 @@ bindkey "\e[1;5C" forward-word
 
 alias noh="unsetopt sharehistory"
 
+unsetopt auto_name_dirs # rvm_rvmrc_cwd fix
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 unset RUBYOPT
 cd . # to rvm reload
