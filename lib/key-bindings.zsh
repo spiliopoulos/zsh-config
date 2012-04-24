@@ -2,6 +2,7 @@
 
 bindkey -e
 bindkey '\ew' kill-region
+bindkey -s '\eh' "cd ..\n"
 bindkey -s '\el' "ls\n"
 bindkey -s '\ej' "pushd -1\n"
 bindkey -s '\ek' "pushd +1\n"
