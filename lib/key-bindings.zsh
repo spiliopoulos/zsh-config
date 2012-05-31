@@ -2,10 +2,16 @@
 
 bindkey -e
 bindkey '\ew' kill-region
-bindkey -s '\eh' "cd ..\n"
-bindkey -s '\el' "ls\n"
-bindkey -s '\ej' "pushd -1\n"
-bindkey -s '\ek' "pushd +1\n"
+
+# ^j ^i ^m ^, ^. cannot be used
+alias ←="pushd -q +1"
+alias →="pushd -q -0"
+alias ↑="cd .."
+bindkey -s '^u' "↑\n"
+bindkey -s '^b' "←\n"
+bindkey -s '^f' "→\n"
+bindkey -s '^k' "ls\n"
+
 bindkey '^r' history-incremental-search-backward
 bindkey "^[[5~" up-line-or-history
 bindkey "^[[6~" down-line-or-history
