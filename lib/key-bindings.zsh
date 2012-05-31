@@ -11,6 +11,7 @@ bindkey -s '^u' "↑\n"
 bindkey -s '^b' "←\n"
 bindkey -s '^f' "→\n"
 bindkey -s '^k' "ls\n"
+bindkey -s '\ev' "vim\n"
 
 bindkey '^r' history-incremental-search-backward
 bindkey "^[[5~" up-line-or-history
