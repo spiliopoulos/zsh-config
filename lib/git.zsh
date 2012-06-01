@@ -1,8 +1,17 @@
 # get the name of the branch we are on
 function git_prompt_info() {
   [[ "$GIT_PROMPT_DISABLED" != "" ]] && return
-  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-  echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(git_prompt_status)$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  ref=$(git symbolic-ref HEAD 2>&1)
+  if [[ $? == 0 ]]; then
+    echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(git_prompt_status)$ZSH_THEME_GIT_PROMPT_SUFFIX"
+    return
+  fi
+
+  if [[ $ref =~ "Not a git repository" ]]; then
+    return
+  fi
+
+  echo "${ZSH_THEME_GIT_PROMPT_PREFIX}no-branch$ZSH_THEME_GIT_PROMPT_UNMERGED$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
 function disable_git_prompt_info() {
