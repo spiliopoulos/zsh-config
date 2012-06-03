@@ -59,6 +59,8 @@ ZSH_HIGHLIGHT_STYLES+=(
 #bindkey "\e[F" end-of-line
 bindkey "\e[1;5D" backward-word
 bindkey "\e[1;5C" forward-word
+bindkey "^[OD" backward-word
+bindkey "^[OC" forward-word
 
 alias noh="unsetopt sharehistory"
 
