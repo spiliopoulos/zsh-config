@@ -65,18 +65,7 @@ bindkey "^[OC" forward-word
 alias noh="unsetopt sharehistory"
 
 unsetopt auto_name_dirs # rvm_rvmrc_cwd fix
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 unset RUBYOPT
-cd . # to rvm reload
-
-if [[ -x `which hitch` ]]; then
-	hitch() {
-		command hitch "$@"
-		if [[ -s "$HOME/.hitch_export_authors" ]] ; then source "$HOME/.hitch_export_authors" ; fi
-	}
-	alias unhitch='hitch -u'
-	hitch
-fi
 
 alias nogit="disable_git_prompt_info; compdef -d git"
 alias nog="nogit"
@@ -84,3 +73,6 @@ alias npm_bin="PATH=`pwd`/node_modules/.bin:$PATH; rehash"
 
 PATH=~/bin/:~/node_modules/.bin/:$PATH
 export EDITOR=vim
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
+cd . # to rvm reload
