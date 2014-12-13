@@ -1,10 +1,7 @@
 ## Command history configuration
-if [ -z "$HISTFILE" ]; then
-    HISTFILE=$HOME/.zsh_history
-fi
-
-HISTSIZE=100000
-SAVEHIST=100000
+[ -z "$HISTFILE" ] && HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
 
 ## History wrapper
 function omz_history {
