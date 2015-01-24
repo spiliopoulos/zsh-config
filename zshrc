@@ -55,8 +55,8 @@ ZSH_HIGHLIGHT_STYLES+=(
   assign                        'none'
 )
 
-#bindkey "\e[H" beginning-of-line
-#bindkey "\e[F" end-of-line
+bindkey "\e[H" beginning-of-line
+bindkey "\e[F" end-of-line
 bindkey "\e[1;5D" backward-word
 bindkey "\e[1;5C" forward-word
 bindkey "^[OD" backward-word
@@ -74,5 +74,6 @@ alias npm_bin="PATH=`pwd`/node_modules/.bin:$PATH; rehash"
 PATH=~/bin/:~/node_modules/.bin/:$PATH
 export EDITOR=vim
 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
-cd . # to rvm reload
+
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
