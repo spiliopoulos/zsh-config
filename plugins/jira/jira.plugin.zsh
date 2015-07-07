@@ -12,6 +12,14 @@
 # Usage: jira           # opens a new issue
 #        jira ABC-123   # Opens an existing issue
 open_jira_issue () {
+  local open_cmd
+  if [[ "$OSTYPE" = darwin* ]]; then
+    open_cmd='open'
+  else
+    open_cmd='xdg-open'
+  fi
+
+  local jira_url
   if [ -f .jira-url ]; then
     jira_url=$(cat .jira-url)
   elif [ -f ~/.jira-url ]; then
@@ -23,6 +31,7 @@ open_jira_issue () {
     return 1
   fi
 
+  local jira_prefix
   if [ -f .jira-prefix ]; then
     jira_prefix=$(cat .jira-prefix)
   elif [ -f ~/.jira-prefix ]; then
@@ -38,7 +47,7 @@ open_jira_issue () {
     open_command "${jira_url}/secure/CreateIssue!default.jspa"
   elif [[ "$1" = "assigned" || "$1" = "reported" ]]; then
     jira_query $@
-  else 
+  else
     local addcomment=''
     if [[ "$2" == "m" ]]; then
       addcomment="#add-comment"
@@ -46,11 +55,11 @@ open_jira_issue () {
     else
       echo "Opening issue #$1"
     fi
-    
+
     if [[ "$JIRA_RAPID_BOARD" == "true" ]]; then
-      $open_cmd  "$jira_url/issues/$jira_prefix$1$addcomment"
+      $open_cmd "$jira_url/issues/$jira_prefix$1$addcomment"
     else
-      open_command  "$jira_url/browse/$jira_prefix$1$addcomment"
+      $open_cmd "$jira_url/browse/$jira_prefix$1$addcomment"
     fi
   fi
 }
@@ -69,7 +78,11 @@ jira_name () {
 }
 
 jira_query () {
+  local jira_name
+  local verb
   verb="$1"
+  local lookup
+  local preposition
   if [[ "${verb}" = "reported" ]]; then
     lookup=reporter
     preposition=by
