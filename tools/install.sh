@@ -29,7 +29,14 @@ if [ -d "$ZSH" ]; then
   exit
 fi
 
-printf "${BLUE}Cloning Oh My Zsh...${NORMAL}\n"
+# Prevent the cloned repository from having insecure permissions. Failing to do
+# so causes compinit() calls to fail with "command not found: compdef" errors
+# for users with insecure umasks (e.g., "002", allowing group writability). Note
+# that this will be ignored under Cygwin by default, as Windows ACLs take
+# precedence over umasks except for filesystems mounted with option "noacl".
+umask g-w,o-w
+
+echo "\033[0;34mCloning Oh My Zsh...\033[0m"
 hash git >/dev/null 2>&1 && env git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git $ZSH || {
   printf "git not installed\n"
   exit
