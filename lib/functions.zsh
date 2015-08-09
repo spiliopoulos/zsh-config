@@ -192,7 +192,6 @@ function omz_urldecode {
   emulate -L zsh
   local encoded_url=$1
 
-  echo -e input $1
   # Work bytewise, since URLs escape UTF-8 octets
   local caller_encoding=$langinfo[CODESET]
   local LC_ALL=C
@@ -204,7 +203,6 @@ function omz_urldecode {
   tmp=${tmp:gs/\\/\\\\/}
   # Handle %-escapes by turning them into `\xXX` printf escapes
   tmp=${tmp:gs/%/\\x/}
-  echo -E "before decode $tmp"
   local decoded
   eval "decoded=\$'$tmp'"
 
