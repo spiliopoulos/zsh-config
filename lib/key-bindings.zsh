@@ -40,7 +40,7 @@ bindkey "\e[3~" delete-char
 
 # consider emacs keybindings:
 
-#bindkey -e  ## emacs key bindings
+# bindkey -e  ## emacs key bindings
 #
 #bindkey '^[[A' up-line-or-search
 #bindkey '^[[B' down-line-or-search
