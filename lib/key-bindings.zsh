@@ -11,8 +11,8 @@ if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
   function zle-line-finish() {
     echoti rmkx
   }
-  zle -N zle-line-init
-  zle -N zle-line-finish
+  # zle -N zle-line-init
+  # zle -N zle-line-finish
 fi
 
 bindkey -e                                            # Use emacs key bindings
