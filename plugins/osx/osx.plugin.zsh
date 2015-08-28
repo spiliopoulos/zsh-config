@@ -5,8 +5,11 @@
 #       VERSION:  1.1.0
 # ------------------------------------------------------------------------------
 
-function _omz_osx_get_frontmost_app() {
-  local the_app=$(
+function tab() {
+  local command="cd \\\"$PWD\\\"; clear"
+  (( $# > 0 )) && command="${command}; $*"
+
+  the_app=$(
     osascript 2>/dev/null <<EOF
       tell application "System Events"
         name of first item of (every process whose frontmost is true)
