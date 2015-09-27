@@ -69,7 +69,7 @@ unset RUBYOPT
 
 alias nogit="disable_git_prompt_info; compdef -d git"
 alias nog="nogit"
-alias npm_bin="PATH=`pwd`/node_modules/.bin:$PATH; rehash"
+alias npm_bin='PATH=`pwd`/node_modules/.bin:$PATH; rehash'
 
 PATH=~/bin:~/node_modules/.bin:/usr/local/bin:/usr/local/sbin:$PATH
 export EDITOR=vim
