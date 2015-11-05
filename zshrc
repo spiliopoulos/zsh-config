@@ -77,3 +77,4 @@ export EDITOR=vim
 
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
+eval $(keychain --eval --agents ssh -Q --quiet vaggelis_desktop_id_rsa columbia_github_id_rsa spiliopoulos_github_id_rsa gspilio_github_id_rsa)
