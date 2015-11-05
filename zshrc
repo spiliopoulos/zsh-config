@@ -21,7 +21,7 @@ export DISABLE_AUTO_UPDATE="true"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git github git-flow cap gem lol zsh-syntax-highlighting bundler heroku vim)
+plugins=(github cap gem lol zsh-syntax-highlighting bundler heroku vim)
 
 source /etc/profile
 source $ZSH/oh-my-zsh.sh
@@ -69,9 +69,9 @@ unset RUBYOPT
 
 alias nogit="disable_git_prompt_info; compdef -d git"
 alias nog="nogit"
-alias npm_bin="PATH=`pwd`/node_modules/.bin:$PATH; rehash"
+alias npm_bin='PATH=`pwd`/node_modules/.bin:$PATH; rehash'
 
-PATH=~/bin/:~/node_modules/.bin/:$PATH
+PATH=~/bin:~/node_modules/.bin:/usr/local/bin:/usr/local/sbin:$PATH
 export EDITOR=vim
 
 
