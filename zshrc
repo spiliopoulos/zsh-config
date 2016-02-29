@@ -5,7 +5,7 @@ export ZSH=$HOME/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-export ZSH_THEME="gentoo"
+export ZSH_THEME="agnoster"
 
 # Set to this to use case-sensitive completion
 # export CASE_SENSITIVE="true"
@@ -77,4 +77,6 @@ export EDITOR=vim
 
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
-eval $(keychain --eval --agents ssh -Q --quiet vaggelis_desktop_id_rsa columbia_github_id_rsa spiliopoulos_github_id_rsa gspilio_github_id_rsa)
+eval $(keychain --eval --agents ssh -Q --quiet --nogui --noask columbia_github_id_rsa spiliopoulos_github_id_rsa gspilio_github_id_rsa ds_cluster_columbia_id_rsa)
+
+alias rqqueues="while true; do; rqinfo -Q; sleep 5; done;"
