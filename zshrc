@@ -21,7 +21,10 @@ export DISABLE_AUTO_UPDATE="true"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(github cap gem lol zsh-syntax-highlighting bundler heroku vim)
+plugins=(gitfast git-extras jsontools pip web-search wd lol zsh-syntax-highlighting catimg chucknorris common-aliases vim ssh-agent)
+
+zstyle :omz:plugins:ssh-agent agent-forwarding on
+zstyle :omz:plugins:ssh-agent identities spiliopoulos_github_id_rsa columbia_github_id_rsa ds_cluster_columbia_id_rsa
 
 source /etc/profile
 source $ZSH/oh-my-zsh.sh
@@ -77,6 +80,5 @@ export EDITOR=vim
 
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
-eval $(keychain --eval --agents ssh -Q --quiet --nogui --noask columbia_github_id_rsa spiliopoulos_github_id_rsa gspilio_github_id_rsa ds_cluster_columbia_id_rsa)
 
 alias rqqueues="while true; do; rqinfo -Q; sleep 5; done;"
