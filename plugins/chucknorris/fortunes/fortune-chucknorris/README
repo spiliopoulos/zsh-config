@@ -1,0 +1,61 @@
+Chuck Norris Facts Fortune-Mod
+Packaged By: Paul Kessler
+FEb 2, 2006
+
+DISCLAIMER!
+
+Give credit where credit is due I'm just the guy that packaged up
+all of these amazing facts about Chuck Norris. I repackaged the quotes
+from the following website:
+
+http://www.chucknorrisfacts.com/index.html
+
+On the last page they also give credit to far to many people to list here
+for providing many of these quotes. Please visit the site and enjoy!
+
+INSTALL
+	Copy the files chucknorris and chucknorris.dat into /usr/share/fortune/
+	That is it.
+
+
+The software package, including the files:
+	chucknorris		(the quotes)
+	chucknorris.dat		(the quotes index)
+	README			(this file)
+
+
+License of Package:
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+USA.
+
+	[CRC's note:  The GPL is also available on the web [2].]
+
+
+URLS
+
+[1] Penguin Liberation Front
+http://lis.snv.jussieu.fr/~rousse/plf/
+
+[2] GPL
+http://www.gnu.org/licenses/licenses.html#GPL
+
+Page from whence this package came
+http://www.cs.indiana.edu/~crcarter/homer/homer.html
+
+Official Site
+http://www.thesimpsons.com
+
+Unofficial (and way cooler) Site
+http://www.snpp.com
