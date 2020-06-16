@@ -21,10 +21,10 @@ export DISABLE_AUTO_UPDATE="true"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(gitfast git-extras jsontools pip web-search wd lol zsh-syntax-highlighting catimg chucknorris common-aliases vim ssh-agent)
+plugins=(ssh-agent git-extras jsontools pip web-search wd lol zsh-syntax-highlighting catimg chucknorris common-aliases zsh-autosuggestions virtualenv)
 
 zstyle :omz:plugins:ssh-agent agent-forwarding on
-zstyle :omz:plugins:ssh-agent identities spiliopoulos_github_id_rsa columbia_github_id_rsa ds_cluster_columbia_id_rsa
+zstyle :omz:plugins:ssh-agent identities id_rsa
 
 source /etc/profile
 source $ZSH/oh-my-zsh.sh
@@ -78,7 +78,93 @@ PATH=~/bin:~/node_modules/.bin:/usr/local/bin:/usr/local/sbin:$PATH
 export EDITOR=vim
 
 
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+#export PATH="$HOME/.rbenv/bin:$PATH"
+#eval "$(rbenv init -)"
 
-alias rqqueues="while true; do; rqinfo -Q; sleep 5; done;"
+#alias rqqueues="while true; do; rqinfo -Q; sleep 5; done;"
+
+# ASANA related stuff
+export CODEZ=~/sandbox/asana
+export ASANA_GIT_NAME="Yannis Spiliopoulos"
+export ASANA_GIT_EMAIL="yannisspiliopoulos@asana.com"
+export ASANA_ARCH=x64
+export MYSQL=mysql5
+export CONFIG=sand
+export JAVA_HOME="$(/usr/libexec/java_home)"
+export MAC_CONFIGURE_VERSION=2
+source $CODEZ/admin/mac.bashrc
+alias codez="cd $CODEZ"
+alias python3="PYTHONPATH=\"python3:$CODEZ:$CODEZ/3rdparty\" python3"
+alias ipython3="PYTHONPATH=\"python3:$CODEZ:$CODEZ/3rdparty\" ipython"
+alias pip3="PYTHONPATH=\"python3:$CODEZ:$CODEZ/3rdparty\" pip3"
+
+#export PS1="[$PS_GIT_BRANCH] \w: "
+# Use homebrew's python
+export PATH=/usr/local/bin:$PATH
+
+# MAC-RELATED
+alias mac_restart_audio="sudo kill -9 `ps ax|grep 'coreaudio[a-z]' | awk '{print $1}'`"
+alias tmux="TERM=xterm-256color tmux"
+
+#Check for files that start with empty lines
+check_for_files_starting_with_empty_lines () {
+  gawk 'FNR>1 {nextfile} /^\s*$/ { print FILENAME ; nextfile }' $(find $1 -name '*.py')
+}
+
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=91'
+
+sf() {
+  if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
+  printf -v search "%q" "$*"
+  include="yml,js,json,php,md,styl,pug,jade,html,config,py,cpp,c,go,hs,rb,conf,fa,lst"
+  exclude=".config,.git,node_modules,vendor,build,yarn.lock,*.sty,*.bst,*.coffee,dist,*bazel-*/*"
+  rg_command='rg --column --line-number --no-heading --ignore-case --no-ignore --hidden --follow --color "always" -g "*.{'$include'}" -g "[!.]*" -g "!{'$exclude'}/*" '
+  files=`eval $rg_command $search 2> /dev/null | fzf --ansi --multi --reverse | awk -F ':' '{printf "%s ", $1":"$2":"$3}'`
+  echo $files
+  [[ -n "$files" ]] && ${EDITOR:-vim} $=files
+}
+
+alias vig="FZF_DEFAULT_COMMAND='(git ls-tree -r --name-only HEAD || find . -path \"*/\.*\" -prune -o -type f -print -o -type l -print | sed s/^..//) 2> /dev/null' vim +FZF"
+
+. ~/.zsh/asanarc
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+[[ -s "$HOME/.local/share/marker/marker.sh" ]] && source "$HOME/.local/share/marker/marker.sh"
+# marker templete select
+_fzf_marker_main_widget() {
+  if echo "$BUFFER" | ggrep -q -P "{{"; then
+    _fzf_marker_placeholder
+  else
+    local selected
+    if selected=$(cat ${FZF_MARKER_CONF_DIR:-~/.config/marker}/*.txt |
+      sed -e "s/\(^[a-zA-Z0-9_-]\+\)\s/${FZF_MARKER_COMMAND_COLOR:-\x1b[38;5;255m}\1\x1b[0m /" \
+          -e "s/\s*\(#\+\)\(.*\)/${FZF_MARKER_COMMENT_COLOR:-\x1b[38;5;8m}  \1\2\x1b[0m/" |
+      fzf --bind 'tab:down,btab:up' --height=80% --ansi -q "$LBUFFER"); then
+      LBUFFER=$(echo $selected | sed 's/\s*#.*//')
+    fi
+    zle redisplay
+  fi
+}
+
+_fzf_marker_placeholder() {
+  local strp pos placeholder
+  strp=$(echo $BUFFER | ggrep -Z -P -b -o "\{\{[\w]+\}\}")
+  strp=$(echo "$strp" | head -1)
+  pos=$(echo $strp | cut -d ":" -f1)
+  placeholder=$(echo $strp | cut -d ":" -f2)
+  if [[ -n "$1" ]]; then
+    BUFFER=$(echo $BUFFER | sed -e "s/{{//" -e "s/}}//")
+    CURSOR=$(($pos + ${#placeholder} - 4))
+  else
+    BUFFER=$(echo $BUFFER | sed "s/$placeholder//")
+    CURSOR=pos
+  fi
+}
+
+_fzf_marker_placeholder_widget() { _fzf_marker_placeholder "defval" }
+
+zle -N _fzf_marker_main_widget
+zle -N _fzf_marker_placeholder_widget
+bindkey "${FZF_MARKER_MAIN_KEY:-\C-@}" _fzf_marker_main_widget
+bindkey "${FZF_MARKER_PLACEHOLDER_KEY:-\C-v}" _fzf_marker_placeholder_widget
+if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
