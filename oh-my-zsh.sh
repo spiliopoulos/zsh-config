@@ -66,13 +66,11 @@ zcompdump_metadata="\
 #omz revision: $(cd -q "$ZSH"; git rev-parse HEAD 2>/dev/null)
 #omz fpath: $fpath\
 "
-
 # Delete the zcompdump file if OMZ zcompdump metadata changed
 if ! cmp -s <(command grep '^#omz' "$ZSH_COMPDUMP" 2>/dev/null) <(echo "$zcompdump_metadata"); then
   command rm -f "$ZSH_COMPDUMP"
   zcompdump_refresh=1
 fi
-
 if [[ $ZSH_DISABLE_COMPFIX != true ]]; then
   source $ZSH/lib/compfix.zsh
   # If completion insecurities exist, warn the user

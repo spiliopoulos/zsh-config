@@ -1,3 +1,6 @@
+# Profiling
+zmodload zsh/zprof
+
 # Path to your oh-my-zsh configuration.
 export ZSH=$HOME/.oh-my-zsh
 
@@ -24,18 +27,21 @@ export DISABLE_AUTO_UPDATE="true"
 plugins=(ssh-agent git-extras jsontools pip web-search wd lol zsh-syntax-highlighting catimg chucknorris common-aliases zsh-autosuggestions virtualenv)
 
 zstyle :omz:plugins:ssh-agent agent-forwarding on
-zstyle :omz:plugins:ssh-agent identities id_rsa
-
-source /etc/profile
-source $ZSH/oh-my-zsh.sh
-
-unsetopt nomatch
-unsetopt correctall
+zstyle :omz:plugins:ssh-agent identities hetzner_id_rsa
 
 # Customize to your needs...
 LS_COLORS='no=00;32:fi=00:di=00;34:ln=01;36:pi=04;33:so=01;35:bd=33;04:cd=33;04:or=31;01:ex=00;32:*.rtf=00;33:*.txt=00;33:*.html=00;33:*.doc=00;33:*.pdf=00;33:*.ps=00;33:*.sit=00;31:*.hqx=00;31:*.bin=00;31:*.tar=00;31:*.tgz=00;31:*.arj=00;31:*.taz=00;31:*.lzh=00;31:*.zip=00;31:*.z=00;31:*.Z=00;31:*.gz=00;31:*.deb=00;31:*.dmg=00;36:*.jpg=00;35:*.gif=00;35:*.bmp=00;35:*.ppm=00;35:*.tga=00;35:*.xbm=00;35:*.xpm=00;35:*.tif=00;35:*.mpg=00;37:*.avi=00;37:*.gl=00;37:*.dl=00;37:*.mov=00;37:*.mp3=00;35:'
 export LS_COLORS;
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
+source ~/.zsh/asanarc
+source /etc/profile
+source $ZSH/oh-my-zsh.sh
+
+
+unsetopt nomatch
+unsetopt correctall
+
 ZSH_HIGHLIGHT_STYLES+=(
   default                       'none'
   unknown-token                 'fg=red,bold'
@@ -78,8 +84,8 @@ PATH=~/bin:~/node_modules/.bin:/usr/local/bin:/usr/local/sbin:$PATH
 export EDITOR=vim
 
 
-#export PATH="$HOME/.rbenv/bin:$PATH"
-#eval "$(rbenv init -)"
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
 
 #alias rqqueues="while true; do; rqinfo -Q; sleep 5; done;"
 
@@ -92,7 +98,6 @@ export MYSQL=mysql5
 export CONFIG=sand
 export JAVA_HOME="$(/usr/libexec/java_home)"
 export MAC_CONFIGURE_VERSION=2
-source $CODEZ/admin/mac.bashrc
 alias codez="cd $CODEZ"
 alias python3="PYTHONPATH=\"python3:$CODEZ:$CODEZ/3rdparty\" python3"
 alias ipython3="PYTHONPATH=\"python3:$CODEZ:$CODEZ/3rdparty\" ipython"
@@ -125,8 +130,6 @@ sf() {
 }
 
 alias vig="FZF_DEFAULT_COMMAND='(git ls-tree -r --name-only HEAD || find . -path \"*/\.*\" -prune -o -type f -print -o -type l -print | sed s/^..//) 2> /dev/null' vim +FZF"
-
-. ~/.zsh/asanarc
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 [[ -s "$HOME/.local/share/marker/marker.sh" ]] && source "$HOME/.local/share/marker/marker.sh"
@@ -168,3 +171,14 @@ zle -N _fzf_marker_placeholder_widget
 bindkey "${FZF_MARKER_MAIN_KEY:-\C-@}" _fzf_marker_main_widget
 bindkey "${FZF_MARKER_PLACEHOLDER_KEY:-\C-v}" _fzf_marker_placeholder_widget
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+
+alias code42off='sudo launchctl unload /Library/LaunchDaemons/com.code42.service.plist'
+
+timezsh() {
+  shell=${1-$SHELL}
+  for i in $(seq 1 4); do /usr/bin/time $shell -i -c exit; done
+}
+
+RPROMPT="[%D{%f/%m/%y} | %D{%L:%M:%S}]"
+
+zprof
