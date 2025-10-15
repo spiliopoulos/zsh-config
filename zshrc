@@ -1,163 +1,358 @@
-# Set the path to the oh-my-zsh installation directory
-export ZSH=$HOME/.oh-my-zsh
+# ============================================
+# ZINIT INITIALIZATION
+# ============================================
+# Set the directory to store zinit and plugins
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
-# Use the agnoster theme for a clean, informative prompt with git status
-# Agnoster shows current directory, git branch/status, and user context
-export ZSH_THEME="agnoster"
+# Source zinit
+source "${ZINIT_HOME}/zinit.zsh"
 
-# Keep case-insensitive tab completion (default behavior)
-# Uncomment the line below to enable case-sensitive completion
-# export CASE_SENSITIVE="true"
-
-# Disable automatic updates to prevent interruptions during terminal use
-# This ensures oh-my-zsh won't prompt for updates during work sessions
-export DISABLE_AUTO_UPDATE="true"
-
-# Keep ls colors enabled for better visual file type distinction
-# Uncomment the line below to disable colors in ls output
-# export DISABLE_LS_COLORS="true"
-
-# Keep automatic terminal title setting for better window management
-# Uncomment the line below to disable automatic terminal title updates
-# export DISABLE_AUTO_TITLE="true"
-
-# Load essential plugins for enhanced shell functionality
-# Each plugin adds specific commands, completions, or features:
-# - gitfast: faster git completions and aliases
-# - git-extras: additional git commands (git-summary, git-repl, etc.)
-# - jsontools: JSON formatting and manipulation tools (pp_json, is_json, etc.)
-# - pip: Python package manager completions
-# - web-search: search engines from terminal (google, stackoverflow, etc.)
-# - wd: warp directory for quick navigation bookmarks
-# - lol: humorous git aliases (git yolo, git such, etc.)
-# - zsh-syntax-highlighting: real-time command syntax highlighting
-# - catimg: display images in terminal
-# - chucknorris: random Chuck Norris facts for entertainment
-# - common-aliases: useful shell aliases (la, ll, grep colors, etc.)
-# - vim: vim mode and key bindings
-# - ssh-agent: automatic SSH key management
-plugins=(gitfast git-extras jsontools pip web-search wd lol zsh-syntax-highlighting catimg chucknorris common-aliases vim ssh-agent)
-
-# Enable SSH agent forwarding to allow using local SSH keys on remote servers
-# This is useful when connecting through jump hosts or remote development environments
-zstyle :omz:plugins:ssh-agent agent-forwarding on
-
-# Automatically load specific SSH identity files for seamless authentication
-# These keys provide access to: GitHub (personal), GitHub (Columbia), and Columbia DS cluster
-zstyle :omz:plugins:ssh-agent identities spiliopoulos_github_id_rsa columbia_github_id_rsa ds_cluster_columbia_id_rsa
-
-# Load system-wide profile settings before oh-my-zsh initialization
-# Ensures compatibility with system-level environment configurations
-source /etc/profile
-
-# Initialize oh-my-zsh with all configured themes, plugins, and settings
-# This must come after all configuration variables are set
-source $ZSH/oh-my-zsh.sh
-
+# ============================================
+# ZSH OPTIONS & SETTINGS
+# ============================================
 # Disable glob pattern failures - allows commands with unmatched patterns to run
-# Without this, commands like "ls *.nonexistent" would fail instead of passing the pattern literally
 unsetopt nomatch
 
-# Disable automatic command correction to prevent unwanted command modifications
-# This stops zsh from suggesting corrections for mistyped commands
+# Disable automatic command correction
 unsetopt correctall
 
-# Define custom color scheme for file listings and completions
-# Color format: attribute=foreground;background where 00=normal, 01=bold, 04=underline
-# Colors: 30-37=foreground, 40-47=background (0=black,1=red,2=green,3=yellow,4=blue,5=magenta,6=cyan,7=white)
-# File types: no=normal, fi=file, di=directory, ln=symlink, pi=pipe, so=socket, bd=block, cd=char, or=orphan, ex=executable
-LS_COLORS='no=00;32:fi=00:di=00;34:ln=01;36:pi=04;33:so=01;35:bd=33;04:cd=33;04:or=31;01:ex=00;32:*.rtf=00;33:*.txt=00;33:*.html=00;33:*.doc=00;33:*.pdf=00;33:*.ps=00;33:*.sit=00;31:*.hqx=00;31:*.bin=00;31:*.tar=00;31:*.tgz=00;31:*.arj=00;31:*.taz=00;31:*.lzh=00;31:*.zip=00;31:*.z=00;31:*.Z=00;31:*.gz=00;31:*.deb=00;31:*.dmg=00;36:*.jpg=00;35:*.gif=00;35:*.bmp=00;35:*.ppm=00;35:*.tga=00;35:*.xbm=00;35:*.xpm=00;35:*.tif=00;35:*.mpg=00;37:*.avi=00;37:*.gl=00;37:*.dl=00;37:*.mov=00;37:*.mp3=00;35:'
+# Disable auto directory naming (prevents conflicts with tools like RVM)
+unsetopt auto_name_dirs
 
-# Export LS_COLORS for use by ls command and other utilities
-export LS_COLORS;
+# Modern navigation and usability options
+setopt AUTO_PUSHD           # Push directories onto stack automatically
+setopt PUSHD_IGNORE_DUPS    # Don't push duplicates
+setopt PUSHD_SILENT         # Don't print stack after pushd/popd
+setopt INTERACTIVE_COMMENTS # Allow comments in interactive shell
 
-# Apply the same color scheme to tab completion listings for consistency
-# This makes completion menus use the same file type colors as ls
+# History configuration - unlimited with manual cleanup
+HISTSIZE=1000000000              # Unlimited history in memory
+SAVEHIST=1000000000              # Unlimited history in file
+HISTFILE=~/.zsh_history
+setopt EXTENDED_HISTORY          # Record timestamp of each command
+setopt HIST_IGNORE_ALL_DUPS      # Remove older duplicates
+setopt HIST_FIND_NO_DUPS         # Don't show duplicates in search
+setopt HIST_IGNORE_SPACE         # Ignore commands starting with space
+setopt SHARE_HISTORY             # Share history between sessions
+
+# ============================================
+# THEME - Powerlevel10k (Modern, Fast, Async)
+# ============================================
+# Load Powerlevel10k theme - modern replacement for agnoster
+# It has instant prompt and async git status for better performance
+zinit ice depth=1
+zinit light romkatv/powerlevel10k
+zinit ice svn
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# ============================================
+# PLUGINS - Modern, Fast, Functional
+# ============================================
+
+# Load essential completion support
+zinit ice wait lucid blockf atpull'zinit creinstall -q .'
+zinit light zsh-users/zsh-completions
+
+# Fish-like autosuggestions (type and see suggestions from history)
+zinit ice wait lucid atload'_zsh_autosuggest_start'
+zinit light zsh-users/zsh-autosuggestions
+
+# Syntax highlighting - must be loaded after compinit and other widgets
+# Using the standalone version (faster than OMZ version)
+zinit ice wait lucid atinit'zpcompinit; zpcdreplay'
+zinit light zsh-users/zsh-syntax-highlighting
+
+# Git plugin for aliases and functions
+zinit ice wait lucid
+zinit snippet OMZL::git.zsh
+
+zinit ice wait lucid
+zinit snippet OMZP::git
+
+# Git extras - additional git commands
+zinit ice wait lucid
+zinit snippet OMZP::git-extras
+
+# JSON tools - for JSON formatting (or consider using standalone jq)
+zinit ice wait lucid
+zinit snippet OMZP::jsontools
+
+# Python pip completion
+zinit ice wait lucid
+zinit snippet OMZP::pip
+
+# Web search from terminal (google, stackoverflow, etc.)
+zinit ice wait lucid
+zinit snippet OMZP::web-search
+
+# SSH agent management with your specific configuration
+zinit ice wait lucid
+zinit snippet OMZP::ssh-agent
+
+# Configure SSH agent to forward connections and load your keys
+zstyle :omz:plugins:ssh-agent agent-forwarding on
+zstyle :omz:plugins:ssh-agent identities spiliopoulos_github_id_rsa columbia_github_id_rsa ds_cluster_columbia_id_rsa
+
+# ============================================
+# CUSTOM COLORS - LS_COLORS & SYNTAX HIGHLIGHTING
+# ============================================
+
+# Use vivid for modern LS_COLORS if available, otherwise fallback to custom colors
+if command -v vivid &> /dev/null; then
+  # Use vivid with a modern theme (try different themes: molokai, snazzy, nord, etc.)
+  export LS_COLORS="$(vivid generate snazzy)"
+else
+  # Fallback to custom LS_COLORS if vivid not installed
+  LS_COLORS='no=00;32:fi=00:di=00;34:ln=01;36:pi=04;33:so=01;35:bd=33;04:cd=33;04:or=31;01:ex=00;32:'
+  LS_COLORS+='*.rtf=00;33:*.txt=00;33:*.html=00;33:*.doc=00;33:*.pdf=00;33:*.ps=00;33:'
+  LS_COLORS+='*.sit=00;31:*.hqx=00;31:*.bin=00;31:*.tar=00;31:*.tgz=00;31:*.arj=00;31:'
+  LS_COLORS+='*.taz=00;31:*.lzh=00;31:*.zip=00;31:*.z=00;31:*.Z=00;31:*.gz=00;31:'
+  LS_COLORS+='*.deb=00;31:*.dmg=00;36:*.jpg=00;35:*.gif=00;35:*.bmp=00;35:*.ppm=00;35:'
+  LS_COLORS+='*.tga=00;35:*.xbm=00;35:*.xpm=00;35:*.tif=00;35:*.mpg=00;37:*.avi=00;37:'
+  LS_COLORS+='*.gl=00;37:*.dl=00;37:*.mov=00;37:*.mp3=00;35:'
+  LS_COLORS+='*.rs=00;33:*.go=00;33:*.ts=00;33:*.tsx=00;33:*.jsx=00;33:*.vue=00;33:'
+  LS_COLORS+='*.yml=00;33:*.yaml=00;33:*.toml=00;33:*.json=00;33:*.md=00;33:*.py=00;33:'
+  export LS_COLORS
+fi
+
+# Apply same colors to tab completion
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
-# Configure syntax highlighting colors for the zsh-syntax-highlighting plugin
-# This provides real-time coloring of command line elements as you type
+# Syntax highlighting styles for command line
 ZSH_HIGHLIGHT_STYLES+=(
-  default                       'none'            # Default text style - no highlighting
-  unknown-token                 'fg=red,bold'     # Invalid/unknown commands - bold red for visibility
-  reserved-word                 'fg=yellow'       # Shell keywords (if, for, while) - yellow for distinction
-  alias                         'fg=none,bold'    # User-defined aliases - bold to show they're custom
-  builtin                       'fg=none,bold'    # Shell built-in commands - bold for emphasis
-  function                      'fg=none,bold'    # User-defined functions - bold to differentiate
-  command                       'fg=none,bold'    # External commands - bold for clarity
-  hashed-command                'fg=none,bold'    # Commands found via hash table - bold for consistency
-  path                          'fg=cyan'         # File/directory paths - cyan for easy identification
-  globbing                      'fg=cyan'         # Glob patterns (*, ?, []) - cyan like paths
-  history-expansion             'fg=blue'         # History expansions (!!, !$) - blue for special syntax
-  single-hyphen-option          'fg=magenta'      # Short options (-h, -v) - magenta for parameters
-  double-hyphen-option          'fg=magenta'      # Long options (--help, --version) - magenta for parameters
-  back-quoted-argument          'fg=magenta,bold' # Command substitution (`cmd`) - bold magenta for execution
-  single-quoted-argument        'fg=green'        # Single-quoted strings - green for literals
-  double-quoted-argument        'fg=green'        # Double-quoted strings - green for literals
-  dollar-double-quoted-argument 'fg=cyan'         # Variable expansion in quotes ($var) - cyan for variables
-  back-double-quoted-argument   'fg=cyan'         # Escaped characters in quotes (\n) - cyan for special
-  assign                        'none'            # Variable assignments - no special highlighting
+  default                       'none'
+  unknown-token                 'fg=red,bold'
+  reserved-word                 'fg=yellow'
+  alias                         'fg=none,bold'
+  builtin                       'fg=none,bold'
+  function                      'fg=none,bold'
+  command                       'fg=none,bold'
+  hashed-command                'fg=none,bold'
+  path                          'fg=cyan'
+  globbing                      'fg=cyan'
+  history-expansion             'fg=blue'
+  single-hyphen-option          'fg=magenta'
+  double-hyphen-option          'fg=magenta'
+  back-quoted-argument          'fg=magenta,bold'
+  single-quoted-argument        'fg=green'
+  double-quoted-argument        'fg=green'
+  dollar-double-quoted-argument 'fg=cyan'
+  back-double-quoted-argument   'fg=cyan'
+  assign                        'none'
 )
 
-# Configure key bindings for better terminal navigation
-# Home key - jump to beginning of command line
+# ============================================
+# KEY BINDINGS - Better Terminal Navigation
+# ============================================
+# Home key - jump to beginning of line
 bindkey "\e[H" beginning-of-line
+bindkey "^[[H" beginning-of-line
 
-# End key - jump to end of command line
+# End key - jump to end of line
 bindkey "\e[F" end-of-line
+bindkey "^[[F" end-of-line
 
-# Ctrl+Left Arrow - move backward by whole words for faster editing
+# Standard Emacs-style word navigation (works everywhere)
+# Alt+f - move forward by word
+bindkey "^[f" forward-word
+bindkey "\ef" forward-word
+
+# Alt+b - move backward by word
+bindkey "^[b" backward-word
+bindkey "\eb" backward-word
+
+# Ctrl+Left/Right Arrow (for terminals that support it)
 bindkey "\e[1;5D" backward-word
-
-# Ctrl+Right Arrow - move forward by whole words for faster editing
 bindkey "\e[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+bindkey "^[[1;5C" forward-word
 
-# Alternative Left Arrow sequence - move backward by words (compatibility)
-bindkey "^[OD" backward-word
+# Option+Left/Right Arrow in iTerm2 (if configured as Esc+)
+bindkey "\e\e[D" backward-word
+bindkey "\e\e[C" forward-word
 
-# Alternative Right Arrow sequence - move forward by words (compatibility)
-bindkey "^[OC" forward-word
+# Additional useful bindings
+bindkey "^A" beginning-of-line  # Ctrl+A
+bindkey "^E" end-of-line        # Ctrl+E
+bindkey "^K" kill-line          # Ctrl+K - delete to end of line
+bindkey "^U" backward-kill-line # Ctrl+U - delete to start of line
+bindkey "^W" backward-kill-word # Ctrl+W - delete word backward
+bindkey "^Y" yank               # Ctrl+Y - paste (yank)
 
-# Disable shared history between terminal sessions when needed
-# Useful when you want separate command histories for different tasks/projects
+# ============================================
+# ALIASES - Productivity Shortcuts
+# ============================================
+# Disable shared history between sessions when needed
 alias noh="unsetopt sharehistory"
 
-# Disable auto directory naming to fix RVM compatibility issues
-# This prevents zsh from automatically creating directory shortcuts that conflict with RVM
-unsetopt auto_name_dirs # rvm_rvmrc_cwd fix
-
-# Clear Ruby optimization variable to avoid potential conflicts
-# Some Ruby gems or tools may set RUBYOPT which can interfere with normal operation
-unset RUBYOPT
-
-# Disable git information in prompt and completions for faster terminal performance
-# Useful in large repositories where git operations are slow
+# Disable git prompt and completions for performance in large repos
 alias nogit="disable_git_prompt_info; compdef -d git"
-
-# Short alias for nogit - convenient for quick use
 alias nog="nogit"
 
-# Add local node_modules/.bin to PATH and refresh command hash
-# Allows running locally installed npm packages without npx
+# Add local node_modules/.bin to PATH and refresh
 alias npm_bin='PATH=`pwd`/node_modules/.bin:$PATH; rehash'
 
-# Configure PATH to prioritize local binaries and development tools
-# Order: personal bin -> local node modules -> Homebrew -> system paths
-# This ensures local/custom tools take precedence over system versions
-PATH=~/bin:~/node_modules/.bin:/usr/local/bin:/usr/local/sbin:$PATH
+# Continuous RQ (Redis Queue) monitoring
+alias rqqueues="while true; do; rqinfo -Q; sleep 5; done;"
 
-# Set vim as the default text editor for command-line operations
-# Used by git commits, crontab editing, and other tools that need an editor
+# Vacuum old history - removes entries older than X days
+# Usage: vacuum_history 90  (removes entries older than 90 days)
+# Usage: vacuum_history 180 (removes entries older than 180 days)
+vacuum_history() {
+  local days="${1:-90}"  # Default to 90 days if not specified
+  local cutoff_timestamp=$(date -v-${days}d +%s 2>/dev/null || date -d "${days} days ago" +%s 2>/dev/null)
+  
+  if [[ -z "$cutoff_timestamp" ]]; then
+    echo "Error: Unable to calculate cutoff date"
+    return 1
+  fi
+  
+  local backup_file="${HISTFILE}.backup.$(date +%Y%m%d_%H%M%S)"
+  local temp_file="${HISTFILE}.tmp"
+  
+  echo "📦 Backing up history to: $backup_file"
+  cp "$HISTFILE" "$backup_file"
+  
+  echo "🧹 Removing history entries older than $days days (before $(date -r $cutoff_timestamp '+%Y-%m-%d %H:%M:%S'))..."
+  
+  # Process the history file
+  local removed=0
+  local kept=0
+  
+  while IFS= read -r line; do
+    # Check if line starts with timestamp format ': <timestamp>:'
+    if [[ "$line" =~ ^:[[:space:]]*([0-9]+):[0-9]+\; ]]; then
+      local entry_timestamp="${match[1]}"
+      if (( entry_timestamp >= cutoff_timestamp )); then
+        echo "$line" >> "$temp_file"
+        ((kept++))
+      else
+        ((removed++))
+      fi
+    else
+      # Keep lines that don't have timestamps (shouldn't happen with EXTENDED_HISTORY)
+      echo "$line" >> "$temp_file"
+      ((kept++))
+    fi
+  done < "$HISTFILE"
+  
+  mv "$temp_file" "$HISTFILE"
+  
+  echo "✅ Done! Removed $removed entries, kept $kept entries"
+  echo "💾 Backup saved to: $backup_file"
+  echo "🔄 Reload your shell or run 'fc -R' to reload history"
+}
+
+# ============================================
+# PATH CONFIGURATION
+# ============================================
+# Consolidated PATH setup - order matters (highest priority first)
+# User binaries -> local node modules -> Homebrew -> system
+PATH="$HOME/bin:$HOME/.local/bin:$HOME/node_modules/.bin:/usr/local/bin:/usr/local/sbin:$PATH"
+export PATH
+
+# ============================================
+# ENVIRONMENT VARIABLES
+# ============================================
+# Set vim as default editor for git, crontab, etc.
 export EDITOR=vim
 
-# Add rbenv to PATH for Ruby version management
-# This must come before rbenv init to ensure rbenv command is available
-export PATH="$HOME/.rbenv/bin:$PATH"
+# Clear Ruby optimization variable to avoid conflicts
+unset RUBYOPT
 
-# Initialize rbenv for automatic Ruby version switching
-# This sets up shims and enables automatic .ruby-version file detection
-eval "$(rbenv init -)"
+# ============================================
+# MODERN TOOLS INITIALIZATION
+# ============================================
 
-# Continuous monitoring alias for RQ (Redis Queue) status
-# Displays queue information every 5 seconds for job monitoring
-alias rqqueues="while true; do; rqinfo -Q; sleep 5; done;"
+# Initialize zoxide (smart directory jumping)
+# Use 'z' to jump to directories (e.g., 'z project' to jump to ~/projects/my-project)
+# Use 'zz' for interactive selection with optional filter
+# Note: Using 'zz' instead of 'zi' to avoid conflict with zinit alias
+if command -v zoxide &> /dev/null; then
+  eval "$(zoxide init zsh --cmd z)"
+  # Interactive directory selection with optional query
+  zz() {
+    local result=$(zoxide query -i "$@")
+    if [[ -n "$result" ]]; then
+      cd "$result"
+    fi
+  }
+fi
+
+# Enhanced FZF integration
+if command -v fzf &> /dev/null; then
+  # Setup fzf key bindings and fuzzy completion
+  # Ctrl+T - paste selected files and directories
+  # Ctrl+R - paste selected command from history
+  # Alt+C - cd into selected directory
+  
+  # Use fd instead of find if available (faster and respects .gitignore)
+  if command -v fd &> /dev/null; then
+    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+  fi
+  
+  # Use bat for preview if available
+  if command -v bat &> /dev/null; then
+    export FZF_CTRL_T_OPTS="
+      --preview 'bat --color=always --style=numbers --line-range=:500 {}'
+      --preview-window 'right:60%:wrap'
+    "
+  fi
+  
+  # Beautiful FZF theme
+  export FZF_DEFAULT_OPTS="
+    --height 60%
+    --layout=reverse
+    --border
+    --inline-info
+    --color='fg:#f8f8f2,bg:#282a36,hl:#bd93f9'
+    --color='fg+:#f8f8f2,bg+:#44475a,hl+:#bd93f9'
+    --color='info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6'
+    --color='marker:#ff79c6,spinner:#ffb86c,header:#6272a4'
+  "
+  
+  # Setup FZF keybindings
+  source <(fzf --zsh) 2>/dev/null || true
+fi
+
+# Initialize thefuck (command corrector)
+# Type 'fuck' after a mistake to auto-correct
+if command -v thefuck &> /dev/null; then
+  eval $(thefuck --alias)
+  # Optional: use a less profane alias
+  # eval $(thefuck --alias fix)
+fi
+
+# Modern CLI tool aliases and integrations
+if command -v bat &> /dev/null; then
+  alias cat='bat --paging=never'
+  alias less='bat --paging=always'
+  # Original cat still available as \cat
+  export BAT_THEME="Dracula"
+fi
+
+if command -v rg &> /dev/null; then
+  # ripgrep is already 'rg' command, but add some useful aliases
+  alias grep='rg'
+  # Original grep still available as \grep
+fi
+
+if command -v fd &> /dev/null; then
+  # fd is already the command, add an alias for find if desired
+  alias find='fd'
+  # Original find still available as \find
+fi
+
+# ============================================
+# POWERLEVEL10K CONFIGURATION
+# ============================================
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
