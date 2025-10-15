@@ -1,6 +1,8 @@
 locals.zsh
 log/.zsh_history
 projects.zsh
+config/local.zsh
+zshrc.backup.*
 custom
 !custom/plugins/example
 !custom/example.zsh
