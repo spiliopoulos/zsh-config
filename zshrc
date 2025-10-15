@@ -97,7 +97,7 @@ zinit snippet OMZP::ssh-agent
 
 # Configure SSH agent to forward connections and load your keys
 zstyle :omz:plugins:ssh-agent agent-forwarding on
-zstyle :omz:plugins:ssh-agent identities spiliopoulos_github_id_rsa columbia_github_id_rsa ds_cluster_columbia_id_rsa
+zstyle :omz:plugins:ssh-agent identities hetzner_id_rsa figma_id_ed25519 devbox_id_ed25519
 
 # ============================================
 # CUSTOM COLORS - LS_COLORS & SYNTAX HIGHLIGHTING
@@ -195,12 +195,6 @@ alias noh="unsetopt sharehistory"
 alias nogit="disable_git_prompt_info; compdef -d git"
 alias nog="nogit"
 
-# Add local node_modules/.bin to PATH and refresh
-alias npm_bin='PATH=`pwd`/node_modules/.bin:$PATH; rehash'
-
-# Continuous RQ (Redis Queue) monitoring
-alias rqqueues="while true; do; rqinfo -Q; sleep 5; done;"
-
 # Vacuum old history - removes entries older than X days
 # Usage: vacuum_history 90  (removes entries older than 90 days)
 # Usage: vacuum_history 180 (removes entries older than 180 days)
@@ -262,9 +256,6 @@ export PATH
 # ============================================
 # Set vim as default editor for git, crontab, etc.
 export EDITOR=vim
-
-# Clear Ruby optimization variable to avoid conflicts
-unset RUBYOPT
 
 # ============================================
 # MODERN TOOLS INITIALIZATION
